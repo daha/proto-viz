@@ -57,7 +57,7 @@
         }, {
             field: "FI",
             length: 2,
-            value: 3
+            value: "10"
         }, {
             field: "E",
             length: 1,
@@ -85,32 +85,25 @@
         }],
         data, dw, dh, width, height;
 
-    function translateY(d, i) {
-        return "translate(0," + (i * boxSize) + ")";
-    }
-
-    function translateX(d, i) {
-        return "translate(" + (d.offset * boxSize) + ",0)";
-    }
-
-    function translateTextX(d, i) {
-        return "translate(" + ((d.offset * boxSize) + boxSize / 2) + ",0)";
+    function translateXY(d, i) {
+        return "translate(" +
+            (d.offset * boxSize) + "," +
+            (d.line * boxSize) + ")";
     }
 
     function transformBits(bits) {
-        return [bits.reduce(function (acc, val) {
-            val.offset = acc.offset;
-            val.byte = Math.floor(acc.offset/8);
+        return bits.reduce(function (acc, val) {
+            val.offset = acc.offset % 8;
+            val.line = Math.floor(acc.offset / 8);
             acc.list.push(val);
             acc.offset += val.length;
             return acc;
-        }, {list: [], bytes: 0, offset: 0}).list];
+        }, {list: [], bytes: 0, offset: 0}).list;
     }
 
     data = transformBits(bits);
-    dw = data[0].length;
     dh = data.length;
-    width = dw * boxSize * 10;
+    width = 8 * boxSize;
     height = dh * boxSize;
 
     svg = d3.select("#packet").append("svg")
@@ -118,28 +111,22 @@
         .attr("width", width)
         .attr("height", height);
 
-    svgBits =  svg.selectAll("g")
+    bitData = svg.selectAll("rect")
         .data(data)
         .enter()
-        .append("g")
-        .attr("transform", translateY);
-
-    bitData = svgBits.selectAll("rect")
-        .data(function (d) { return d; })
-        .enter()
         .append("rect")
-        .attr("transform", translateX)
+        .attr("transform", translateXY)
         .attr("width", function (d) { return d.length * boxSize; })
         .attr("height", boxSize);
 
-    svgBits.selectAll("text")
-        .data(function (d) { return d; })
+    svg.selectAll("text")
+        .data(data)
         .enter()
         .append("text")
-        .attr("transform", translateTextX)
+        .attr("transform", translateXY)
+        .attr("dx", "0.5em")
         .attr("dy", "2.3em")
         .attr("width", function (d) { return d.length * boxSize; })
-        .attr("text-anchor", "middle")
         .text(function (d) {
             var output = "";
             if (d.field !== "") {
