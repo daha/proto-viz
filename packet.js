@@ -98,7 +98,7 @@
             acc.list.push(val);
             acc.offset += val.length;
             return acc;
-        }, {list: [], bytes: 0, offset: 0}).list;
+        }, {list: [], offset: 0}).list;
     }
 
     data = transformBits(bits);
@@ -111,22 +111,21 @@
         .attr("width", width)
         .attr("height", height);
 
-    bitData = svg.selectAll("rect")
+    bitData = svg.selectAll("g.bit")
         .data(data)
         .enter()
-        .append("rect")
-        .attr("transform", translateXY)
+        .append("g")
+        .attr("class", "bit")
+        .attr("transform", translateXY);
+
+    bitData.append("rect")
         .attr("width", function (d) { return d.length * boxSize; })
         .attr("height", boxSize);
 
-    svg.selectAll("text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("transform", translateXY)
-        .attr("dx", "0.5em")
+    bitData.append("text")
+        .attr("text-anchor", "middle")
         .attr("dy", "2.3em")
-        .attr("width", function (d) { return d.length * boxSize; })
+        .attr("dx", function (d) { return d.length * boxSize / 2; })
         .text(function (d) {
             var output = "";
             if (d.field !== "") {
