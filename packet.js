@@ -32,29 +32,127 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+// I have borrowed a few lines from the code specified below:
+// https://github.com/mbostock/d3/blob/master/examples/contour/contour.html
+// with the license:
+// https://github.com/mbostock/d3/blob/master/LICENSE
+
 /*globals d3 */
 (function () {
     'use strict';
-    var packet, bits,
-        width = 500,
-        height = 500,
-        boxSize = 10,
-        data = [1, 2, 3, 4, 5, 6, 7, 8];
+    var svg, svgBits, bitData,
+        boxSize = 50,
+        bits = [{
+            field: "D/C",
+            length: 1,
+            value: 1
+        }, {
+            field: "RF",
+            length: 1,
+            value: 0
+        }, {
+            field: "P",
+            length: 1,
+            value: 1
+        }, {
+            field: "FI",
+            length: 2,
+            value: 3
+        }, {
+            field: "E",
+            length: 1,
+            value: 0
+        }, {
+            field: "SN",
+            length: 2,
+            value: ""
+        }, {
+            field: "SN",
+            length: 8,
+            value: 1023
+        }, {
+            field: "",
+            length: 8,
+            value: "Data"
+        }, {
+            field: "",
+            length: 8,
+            value: "..."
+        }, {
+            field: "",
+            length: 8,
+            value: ""
+        }],
+        data, dw, dh, width, height;
 
-    packet = d3.select("#packet").append("svg")
+    function translateY(d, i) {
+        return "translate(0," + (i * boxSize) + ")";
+    }
+
+    function translateX(d, i) {
+        return "translate(" + (d.offset * boxSize) + ",0)";
+    }
+
+    function translateTextX(d, i) {
+        return "translate(" + ((d.offset * boxSize) + boxSize / 2) + ",0)";
+    }
+
+    function transformBits(bits) {
+        return [bits.reduce(function (acc, val) {
+            val.offset = acc.offset;
+            val.byte = Math.floor(acc.offset/8);
+            acc.list.push(val);
+            acc.offset += val.length;
+            return acc;
+        }, {list: [], bytes: 0, offset: 0}).list];
+    }
+
+    data = transformBits(bits);
+    dw = data[0].length;
+    dh = data.length;
+    width = dw * boxSize * 10;
+    height = dh * boxSize;
+
+    svg = d3.select("#packet").append("svg")
         .attr("class", "chart")
         .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", function () { return "translate(0, " + height + ")scale(1, -1)"; });
-    bits =  packet.selectAll("rect")
+        .attr("height", height);
+
+    svgBits =  svg.selectAll("g")
         .data(data)
         .enter()
+        .append("g")
+        .attr("transform", translateY);
+
+    bitData = svgBits.selectAll("rect")
+        .data(function (d) { return d; })
+        .enter()
         .append("rect")
-        .attr("x", function (d, i) { return i * 30; })
-        .attr("y", function (d, i) { return i * 30; })
-        .attr("width", boxSize)
+        .attr("transform", translateX)
+        .attr("width", function (d) { return d.length * boxSize; })
         .attr("height", boxSize);
 
+    svgBits.selectAll("text")
+        .data(function (d) { return d; })
+        .enter()
+        .append("text")
+        .attr("transform", translateTextX)
+        .attr("dy", "2.3em")
+        .attr("width", function (d) { return d.length * boxSize; })
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            var output = "";
+            if (d.field !== "") {
+                output += d.field;
+                if (d.value !== "") {
+                    output += " = ";
+                }
+            }
+
+            if (d.value !== "") {
+                output += d.value;
+            }
+            return output;
+        });
 
 }());

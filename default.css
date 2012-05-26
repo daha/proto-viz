@@ -1,7 +1,26 @@
-.chart rect {
-   fill: steelblue;
-   stroke: white;
+svg {
+  border: solid 1px #000;
 }
+
+rect {
+  fill: #fceee2;
+  stroke: #555;
+  stroke-width: 2px;
+}
+rect.d1 {
+  fill: #ecccca;
+}
+rect.d2 {
+  fill: #edf1f6;
+}
+rect.d3 {
+  fill: #ffffff;
+}
+text {
+  font-size: 0.8em;
+  fill: #000;
+}
+
 aside {
   font-size: small;
   right: 10px;
