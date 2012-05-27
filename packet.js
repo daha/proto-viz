@@ -42,7 +42,7 @@
     'use strict';
     var svg, svgBits, bitData,
         boxSize = 50,
-        bits = [{
+        simple_packet = [{
             field: "D/C",
             length: 1,
             value: 1
@@ -86,6 +86,100 @@
             value: "",
             color: "data"
         }],
+        complex_packet = [{
+            field: "D/C",
+            length: 1,
+            value: 1
+        }, {
+            field: "RF",
+            length: 1,
+            value: 0
+        }, {
+            field: "P",
+            length: 1,
+            value: 1
+        }, {
+            field: "FI",
+            length: 2,
+            value: "10"
+        }, {
+            field: "E",
+            length: 1,
+            value: 1
+        }, {
+            field: "SN",
+            length: 2,
+            value: ""
+        }, {
+            field: "SN",
+            length: 8,
+            value: 1023
+        }, {
+            field: "E",
+            length: 1,
+            value: 1,
+            color: "secondary_header"
+        }, {
+            field: "LI",
+            length: 7,
+            value: 120,
+            color: "secondary_header"
+        }, {
+            field: "LI",
+            length: 4,
+            value: "",
+            color: "secondary_header"
+        }, {
+            field: "E",
+            length: 1,
+            value: 1,
+            color: "secondary_header"
+        }, {
+            field: "LI",
+            length: 3,
+            value: "",
+            color: "secondary_header"
+        }, {
+            field: "LI",
+            length: 8,
+            value: 987,
+            color: "secondary_header"
+        }, {
+            field: "E",
+            length: 1,
+            value: 0,
+            color: "secondary_header"
+        }, {
+            field: "LI",
+            length: 7,
+            value: 456,
+            color: "secondary_header"
+        }, {
+            field: "LI",
+            length: 4,
+            value: "",
+            color: "secondary_header"
+        }, {
+            field: "padding",
+            length: 4,
+            value: "",
+            color: "secondary_header"
+        }, {
+            field: "",
+            length: 8,
+            value: "Data",
+            color: "data"
+        }, {
+            field: "",
+            length: 8,
+            value: "...",
+            color: "odd_data"
+        }, {
+            field: "",
+            length: 8,
+            value: "",
+            color: "data"
+        }],
         data, dw, dh, width, height;
 
     function translateXY(d, i) {
@@ -100,14 +194,15 @@
             val.line = Math.floor(acc.offset / 8);
             acc.list.push(val);
             acc.offset += val.length;
+            acc.bytes = Math.ceil(acc.offset / 8);
             return acc;
-        }, {list: [], offset: 0}).list;
+        }, {list: [], offset: 0, bytes: 0});
     }
 
-    data = transformBits(bits);
+    data = transformBits(complex_packet);
     dh = data.length;
     width = 8 * boxSize;
-    height = dh * boxSize;
+    height = data.bytes * boxSize;
 
     svg = d3.select("#packet").append("svg")
         .attr("class", "chart")
@@ -115,7 +210,7 @@
         .attr("height", height);
 
     bitData = svg.selectAll("g.bit")
-        .data(data)
+        .data(data.list)
         .enter()
         .append("g")
         .attr("class", "bit")
