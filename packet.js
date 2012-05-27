@@ -73,15 +73,18 @@
         }, {
             field: "",
             length: 8,
-            value: "Data"
+            value: "Data",
+            color: "data"
         }, {
             field: "",
             length: 8,
-            value: "..."
+            value: "...",
+            color: "odd_data"
         }, {
             field: "",
             length: 8,
-            value: ""
+            value: "",
+            color: "data"
         }],
         data, dw, dh, width, height;
 
@@ -120,7 +123,10 @@
 
     bitData.append("rect")
         .attr("width", function (d) { return d.length * boxSize; })
-        .attr("height", boxSize);
+        .attr("height", boxSize)
+        .attr("class", function (d) {
+            return d.color || "";
+        });
 
     bitData.append("text")
         .attr("text-anchor", "middle")

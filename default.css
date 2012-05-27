@@ -7,14 +7,14 @@ rect {
   stroke: #555;
   stroke-width: 2px;
 }
-rect.d1 {
+rect.secondary_header {
   fill: #ecccca;
 }
-rect.d2 {
+rect.data {
   fill: #edf1f6;
 }
-rect.d3 {
-  fill: #ffffff;
+rect.odd_data {
+  fill: #fff;
 }
 text {
   font-size: 0.8em;
