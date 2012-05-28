@@ -35,6 +35,7 @@
 /*globals d3 */
 
 // Based on http://bl.ocks.org/1093025 by Mike Bostock
+var globalSvg;
 
 (function () {
     'use strict';
@@ -51,13 +52,32 @@
         box,
         boxEnter,
         data = [
-            {val: 50, s: 0},
-            {val: 100, s: 1},
-            {val: 150, s: 2},
-            {val: 200, s: 3}];
+            {val: 50, state: 0},
+            {val: 100, state: 1},
+            {val: 150, state: 2},
+            {val: 200, state: 3}],
+        area = [];
 
-    function click(e) {
-        console.log(e);
+    globalSvg = svg;
+
+    function removeByValue(arr, val) {
+        var i;
+        for (i = 0; i < arr.length; i += 1) {
+            if (arr[i] === val) {
+                arr.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    function click(d) {
+        var oldState = d.state,
+            newState = (oldState + 1) % 4;
+        d.state = newState;
+        removeByValue(data, d);
+        data.push(d);
+        plotState(oldState);
+        plotState(newState);
     }
 
     function translate(state) {
@@ -67,28 +87,43 @@
         return 'translate(' + x_pos + ', ' + y_pos + ')';
     }
 
+    function createAreas() {
+        var i;
+        for (i = 0; i < 4; i += 1) {
+            area[i] = svg.append('g')
+                .attr('class', 'state')
+                .attr('transform', translate(i));
+        }
+    }
+
     function plotState(state) {
-        var area = svg.append('g')
-                .attr('class', 'state' + state)
-                .attr('transform', translate(state)),
-            boxEnter = area.selectAll('rect')
-                .data(data.filter(function (d) { return d.s === state; }))
-                .enter()
+        var box = area[state].selectAll('rect')
+                .data(data.filter(function (d) { return d.state === state; })),
+            boxEnter = box.enter()
                 .append('rect')
                 .attr('height', boxHeight)
                 .attr('width', boxWidth)
                 .style('fill', color)
                 .style('opacity', 0)
-                .on('click', click);
+                .on('click', click),
+            boxExit = box.exit()
+                .transition()
+                .duration(duration)
+                .attr('width', 0)
+                .attr('height', 0)
+                .remove();
 
-        boxEnter.transition()
+        box.transition()
             .duration(duration)
             .attr('transform', function (d) {
                 return 'translate(' + d.val + ', ' + d.val + ')';
             })
             .style('opacity', 1);
+
+
     }
 
+    createAreas();
     // TODO: make these calls with data/enter
     plotState(0);
     plotState(1);
