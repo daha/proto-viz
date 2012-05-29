@@ -37,38 +37,36 @@
 // with the license:
 // https://github.com/mbostock/d3/blob/master/LICENSE
 
-/*globals d3,btoa */
+/*globals d3 */
 (function () {
     'use strict';
-    var svg, svgBits, bitData,
+    var svg, svgBits, bitData, data, dw, dh, width, height, html,
         boxSizeHeight = 50,
         defaultWidth = 50,
         send_window = [{
             width: 50,
-            color: "green"
+            color: "green2"
         }, {
             width: 100,
-            color: "green"
+            color: "green2"
         }, {
             width: 33,
-            color: "yellow"
+            color: "orange2"
         }, {
             width: 53,
-            color: "red"
+            color: "red2"
         }, {
             width: 110,
-            color: "green"
+            color: "green2"
         }, {
             width: 220,
-            color: "red"
+            color: "red2"
         }, {
             width: 40,
-            color: "red"
+            color: "red2"
         }, {
             width: 60,
-            color: "green"
-        }, {
-            color: "white"
+            color: "green2"
         }, {
             color: "white"
         }, {
@@ -84,9 +82,14 @@
             yellow: "#ffffbf",
             lightgreen: "a6d96a",
             green: "#1a9641",
-            white: "#fff"
-        },
-        data, dw, dh, width, height, html;
+            // white: "#fff",
+            orange2: "#FF7F00",
+            red2: "#E41A1C",
+            blue: "#377EB8",
+            green2: "#4DAF4A",
+            pink: "#984EA3",
+            white: "#377EB8"
+        };
 
     function translateX(d, i) {
         return "translate(" + (d.offset) + ",0)";
