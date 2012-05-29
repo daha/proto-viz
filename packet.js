@@ -37,7 +37,7 @@
 // with the license:
 // https://github.com/mbostock/d3/blob/master/LICENSE
 
-/*globals d3 */
+/*globals d3,btoa */
 (function () {
     'use strict';
     var svg, svgBits, bitData,
@@ -45,142 +45,156 @@
         simple_packet = [{
             field: "D/C",
             length: 1,
-            value: 1
+            value: 1,
+            color: "#fceee2"
         }, {
             field: "RF",
             length: 1,
-            value: 0
+            value: 0,
+            color: "#fceee2"
         }, {
             field: "P",
             length: 1,
-            value: 1
+            value: 1,
+            color: "#fceee2"
         }, {
             field: "FI",
             length: 2,
-            value: "10"
-        }, {
-            field: "E",
-            length: 1,
-            value: 0
-        }, {
-            field: "SN",
-            length: 2,
-            value: ""
-        }, {
-            field: "SN",
-            length: 8,
-            value: 1023
-        }, {
-            field: "",
-            length: 8,
-            value: "Data",
-            color: "data"
-        }, {
-            field: "",
-            length: 8,
-            value: "...",
-            color: "odd_data"
-        }, {
-            field: "",
-            length: 8,
-            value: "",
-            color: "data"
-        }],
-        complex_packet = [{
-            field: "D/C",
-            length: 1,
-            value: 1
-        }, {
-            field: "RF",
-            length: 1,
-            value: 0
-        }, {
-            field: "P",
-            length: 1,
-            value: 1
-        }, {
-            field: "FI",
-            length: 2,
-            value: "10"
-        }, {
-            field: "E",
-            length: 1,
-            value: 1
-        }, {
-            field: "SN",
-            length: 2,
-            value: ""
-        }, {
-            field: "SN",
-            length: 8,
-            value: 1023
-        }, {
-            field: "E",
-            length: 1,
-            value: 1,
-            color: "secondary_header"
-        }, {
-            field: "LI",
-            length: 7,
-            value: 120,
-            color: "secondary_header"
-        }, {
-            field: "LI",
-            length: 4,
-            value: "",
-            color: "secondary_header"
-        }, {
-            field: "E",
-            length: 1,
-            value: 1,
-            color: "secondary_header"
-        }, {
-            field: "LI",
-            length: 3,
-            value: "",
-            color: "secondary_header"
-        }, {
-            field: "LI",
-            length: 8,
-            value: 987,
-            color: "secondary_header"
+            value: "10",
+            color: "#fceee2"
         }, {
             field: "E",
             length: 1,
             value: 0,
-            color: "secondary_header"
+            color: "#fceee2"
         }, {
-            field: "LI",
-            length: 7,
-            value: 456,
-            color: "secondary_header"
-        }, {
-            field: "LI",
-            length: 4,
+            field: "SN",
+            length: 2,
             value: "",
-            color: "secondary_header"
+            color: "#fceee2"
         }, {
-            field: "padding",
-            length: 4,
-            value: "",
-            color: "secondary_header"
+            field: "SN",
+            length: 8,
+            value: 1023,
+            color: "#fceee2"
         }, {
             field: "",
             length: 8,
             value: "Data",
-            color: "data"
+            color: "#edf1f6"
         }, {
             field: "",
             length: 8,
             value: "...",
-            color: "odd_data"
+            color: "#fff"
         }, {
             field: "",
             length: 8,
             value: "",
-            color: "data"
+            color: "#edf1f6"
         }],
-        data, dw, dh, width, height;
+        complex_packet = [{
+            field: "D/C",
+            length: 1,
+            value: 1,
+            color: "#fceee2"
+        }, {
+            field: "RF",
+            length: 1,
+            value: 0,
+            color: "#fceee2"
+        }, {
+            field: "P",
+            length: 1,
+            value: 1,
+            color: "#fceee2"
+        }, {
+            field: "FI",
+            length: 2,
+            value: "10",
+            color: "#fceee2"
+        }, {
+            field: "E",
+            length: 1,
+            value: 1,
+            color: "#fceee2"
+        }, {
+            field: "SN",
+            length: 2,
+            value: "",
+            color: "#fceee2"
+        }, {
+            field: "SN",
+            length: 8,
+            value: 1023,
+            color: "#fceee2"
+        }, {
+            field: "E",
+            length: 1,
+            value: 1,
+            color: "#ecccca"
+        }, {
+            field: "LI",
+            length: 7,
+            value: 120,
+            color: "#ecccca"
+        }, {
+            field: "LI",
+            length: 4,
+            value: "",
+            color: "#ecccca"
+        }, {
+            field: "E",
+            length: 1,
+            value: 1,
+            color: "#ecccca"
+        }, {
+            field: "LI",
+            length: 3,
+            value: "",
+            color: "#ecccca"
+        }, {
+            field: "LI",
+            length: 8,
+            value: 987,
+            color: "#ecccca"
+        }, {
+            field: "E",
+            length: 1,
+            value: 0,
+            color: "#ecccca"
+        }, {
+            field: "LI",
+            length: 7,
+            value: 456,
+            color: "#ecccca"
+        }, {
+            field: "LI",
+            length: 4,
+            value: "",
+            color: "#ecccca"
+        }, {
+            field: "padding",
+            length: 4,
+            value: "",
+            color: "#ecccca"
+        }, {
+            field: "",
+            length: 8,
+            value: "Data",
+            color: "#edf1f6"
+        }, {
+            field: "",
+            length: 8,
+            value: "...",
+            color: "#fff"
+        }, {
+            field: "",
+            length: 8,
+            value: "",
+            color: "#edf1f6"
+        }],
+        data, dw, dh, width, height, html;
 
     function translateXY(d, i) {
         return "translate(" +
@@ -205,7 +219,10 @@
     height = data.bytes * boxSize;
 
     svg = d3.select("#packet").append("svg")
-        .attr("class", "chart")
+        .attr("title", "a packet")
+        .attr("version", 1.1)
+        .attr("xmlns", "http://www.w3.org/2000/svg")
+        .style("border", "solid 1px #000")
         .attr("width", width)
         .attr("height", height);
 
@@ -213,20 +230,26 @@
         .data(data.list)
         .enter()
         .append("g")
-        .attr("class", "bit")
         .attr("transform", translateXY);
 
     bitData.append("rect")
         .attr("width", function (d) { return d.length * boxSize; })
         .attr("height", boxSize)
-        .attr("class", function (d) {
-            return d.color || "";
+        .style("stroke", "#555")
+        .style("stroke-width", "2px")
+        .style("fill", function (d) {
+            return d.color || "#fff";
         });
 
     bitData.append("text")
+        .style("font-size", "0.8em")
+        .style("fill", "#000")
         .attr("text-anchor", "middle")
-        .attr("dy", "2.3em")
-        .attr("dx", function (d) { return d.length * boxSize / 2; })
+        .attr("dy", boxSize / 2 * 1.2)
+        // for the browser: d.length * boxSize / 2
+        // .attr("dx", function (d) { return d.length * boxSize / 2; })
+        // for inkscape: d.length * boxSize
+        .attr("dx", function (d) { return d.length * boxSize; })
         .text(function (d) {
             var output = "";
             if (d.field !== "") {
@@ -242,4 +265,11 @@
             return output;
         });
 
+    html = svg.node().parentNode.innerHTML;
+    d3.select("#link")
+        .append("div")
+        .attr("id", "download")
+        .html("Right-click on this preview and choose Save as<br />Left-Click to dismiss<br />")
+        .append("img")
+        .attr("src", "data:image/svg+xml;base64," + btoa(html));
 }());

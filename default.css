@@ -1,26 +1,3 @@
-svg {
-  border: solid 1px #000;
-}
-
-rect {
-  fill: #fceee2;
-  stroke: #555;
-  stroke-width: 2px;
-}
-rect.secondary_header {
-  fill: #ecccca;
-}
-rect.data {
-  fill: #edf1f6;
-}
-rect.odd_data {
-  fill: #fff;
-}
-text {
-  font-size: 0.8em;
-  fill: #000;
-}
-
 aside {
   font-size: small;
   right: 10px;
