@@ -32,11 +32,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// I have borrowed a few lines from the code specified below:
-// https://github.com/mbostock/d3/blob/master/examples/contour/contour.html
-// with the license:
-// https://github.com/mbostock/d3/blob/master/LICENSE
-
 /*globals d3 */
 (function () {
     'use strict';
