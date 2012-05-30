@@ -114,7 +114,7 @@
     data = addOffsetAndId(send_window);
     dh = data.length;
     width = data.width;
-    height = boxSizeHeight;
+    height = boxSizeHeight + 150;
 
     svg = d3.select("#window").append("svg")
         .attr("title", "a packet")
@@ -123,6 +123,33 @@
         .style("border", "solid 1px #000")
         .attr("width", width)
         .attr("height", height);
+
+    // define arrow-head, generate it with data?
+    d3.select("#window").select("svg")
+        .append("defs")
+        .append("marker")
+        .attr("id", "ArrowFillLeft")
+        .attr("viewBox", "0 0 10 10")
+        .attr("refX", 5)
+        .attr("refY", 5)
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerwidth", 18)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M 10 0 L 0 5 L 10 10 z");
+
+    // an arrow!
+    d3.select("#window").select("svg")
+        .append("g")
+        .append("polyline")
+        .attr("points", "100,59 100,100")
+        .attr("fill", "none")
+        .attr("stroke", "#000")
+        .attr("stroke-width", 4)
+        .attr("marker-start", "url(#ArrowFillLeft)")
+        .attr("fill-opacity", 0)
+        .attr("stroke-opacity", 1);
 
     bitData = svg.selectAll("g.bit")
         .data(data.list)
