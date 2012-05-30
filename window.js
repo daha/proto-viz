@@ -44,47 +44,39 @@
         boxSizeHeight = 50,
         defaultWidth = 50,
         send_window = [{
-            color: "ack"
+            type: "ack"
         }, {
             width: 100,
-            color: "ack"
+            type: "ack"
         }, {
             width: 33,
-            color: "pending",
+            type: "pending",
             arrow: "VT(R)"
         }, {
-            color: "nack"
+            type: "nack"
         }, {
             width: 110,
-            color: "ack"
+            type: "ack"
         }, {
             width: 100,
-            color: "nack"
+            type: "nack"
         }, {
             width: 40,
-            color: "nack"
+            type: "nack"
         }, {
             width: 60,
-            color: "ack"
+            type: "ack"
         }, {
-            color: "unused"
+            type: "unused"
         }, {
-            color: "unused",
+            type: "unused",
             id: "..."
         }, {
-            color: "unused",
+            type: "unused",
             id: 514,
             arrow: "VT(MR)"
         }],
-        colorMap = {
-            red: "#d7191c",
-            orange: "#feae61",
-            yellow: "#ffffbf",
-            lightgreen: "a6d96a",
-            green: "#1a9641",
-            blue: "#377EB8",
-            pink: "#984EA3",
-
+        typeToColorMap = {
             ack: "#4DAF4A",
             pending: "#FF7F00",
             nack: "#E41A1C",
@@ -148,7 +140,7 @@
         .style("stroke", "#000")
         .style("stroke-width", "2px")
         .style("fill", function (d) {
-            return colorMap[d.color] || colorMap.orange;
+            return typeToColorMap[d.type] || typeToColorMap.unused;
         });
 
     boxData.append("text")
@@ -197,7 +189,6 @@
         .style("fill", "#000")
         .attr("text-anchor", "middle")
         .attr("dy", 60)
-        .attr("dx", 0)
         .text(function (d) {
             return d.arrow;
         });
