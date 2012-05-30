@@ -51,7 +51,8 @@
             color: "green2"
         }, {
             width: 33,
-            color: "orange2"
+            color: "orange2",
+            arrow: "VT(R)"
         }, {
             width: 53,
             color: "red2"
@@ -74,7 +75,8 @@
             id: "..."
         }, {
             color: "white",
-            id: 514
+            id: 514,
+            arrow: "VT(MR)"
         }],
         colorMap = {
             red: "#d7191c",
@@ -93,6 +95,10 @@
 
     function translateX(d, i) {
         return "translate(" + (d.offset) + ",0)";
+    }
+
+    function translateArrowX(d) {
+        return d.offset + d.width / 2;
     }
 
     function addOffsetAndId(bits) {
@@ -120,7 +126,6 @@
         .attr("title", "a packet")
         .attr("version", 1.1)
         .attr("xmlns", "http://www.w3.org/2000/svg")
-        .style("border", "solid 1px #000")
         .attr("width", width)
         .attr("height", height);
 
@@ -139,20 +144,21 @@
         .append("path")
         .attr("d", "M 10 0 L 0 5 L 10 10 z");
 
-    // an arrow!
-    d3.select("#window").select("svg")
-        .append("g")
+    // Arrows!
+    svg.selectAll("line")
+        .data(data.list.filter(function (d) {
+            return d.hasOwnProperty("arrow");
+        }))
+        .enter()
         .append("line")
-        .attr("x1", 100)
-        .attr("x2", 100)
-        .attr("y1", 59)
+        .attr("x1", translateArrowX)
+        .attr("x2", translateArrowX)
+        .attr("y1", 55.5)
         .attr("y2", 100)
         .attr("fill", "none")
         .attr("stroke", "#000")
-        .attr("stroke-width", 4)
-        .attr("marker-start", "url(#ArrowFillLeft)")
-        .attr("fill-opacity", 0)
-        .attr("stroke-opacity", 1);
+        .attr("stroke-width", 3)
+        .attr("marker-start", "url(#ArrowFillLeft)");
 
     bitData = svg.selectAll("g.bit")
         .data(data.list)
@@ -163,6 +169,7 @@
     bitData.append("rect")
         .attr("width", function (d) { return d.width; })
         .attr("height", boxSizeHeight)
+        .style("border", "solid 1px #000")
         .style("stroke", "#000")
         .style("stroke-width", "2px")
         .style("fill", function (d) {
