@@ -142,8 +142,11 @@
     // an arrow!
     d3.select("#window").select("svg")
         .append("g")
-        .append("polyline")
-        .attr("points", "100,59 100,100")
+        .append("line")
+        .attr("x1", 100)
+        .attr("x2", 100)
+        .attr("y1", 59)
+        .attr("y2", 100)
         .attr("fill", "none")
         .attr("stroke", "#000")
         .attr("stroke-width", 4)
