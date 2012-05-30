@@ -40,41 +40,39 @@
 /*globals d3 */
 (function () {
     'use strict';
-    var svg, svgBits, bitData, data, dw, dh, width, height, html,
+    var svg, svgBits, boxData, data, dw, dh, width, height, html, arrow,
         boxSizeHeight = 50,
         defaultWidth = 50,
         send_window = [{
-            width: 50,
-            color: "green2"
+            color: "ack"
         }, {
             width: 100,
-            color: "green2"
+            color: "ack"
         }, {
             width: 33,
-            color: "orange2",
+            color: "pending",
             arrow: "VT(R)"
         }, {
-            width: 53,
-            color: "red2"
+            color: "nack"
         }, {
             width: 110,
-            color: "green2"
+            color: "ack"
         }, {
-            width: 220,
-            color: "red2"
+            width: 100,
+            color: "nack"
         }, {
             width: 40,
-            color: "red2"
+            color: "nack"
         }, {
             width: 60,
-            color: "green2"
+            color: "ack"
         }, {
-            color: "white"
+            color: "unused"
         }, {
-            color: "white",
+            color: "unused",
             id: "..."
         }, {
-            color: "white",
+            color: "unused",
             id: 514,
             arrow: "VT(MR)"
         }],
@@ -84,21 +82,25 @@
             yellow: "#ffffbf",
             lightgreen: "a6d96a",
             green: "#1a9641",
-            // white: "#fff",
-            orange2: "#FF7F00",
-            red2: "#E41A1C",
             blue: "#377EB8",
-            green2: "#4DAF4A",
             pink: "#984EA3",
-            white: "#377EB8"
+
+            ack: "#4DAF4A",
+            pending: "#FF7F00",
+            nack: "#E41A1C",
+            unused: "#377EB8"
         };
 
-    function translateX(d, i) {
+    function translateX(d) {
         return "translate(" + (d.offset) + ",0)";
     }
 
-    function translateArrowX(d) {
+    function arrowX(d) {
         return d.offset + d.width / 2;
+    }
+
+    function translateArrow(d) {
+        return "translate(" + (Math.floor(arrowX(d)) + 0.5) + "," + 55.5 + ")";
     }
 
     function addOffsetAndId(bits) {
@@ -119,7 +121,7 @@
 
     data = addOffsetAndId(send_window);
     dh = data.length;
-    width = data.width;
+    width = data.width + 100;
     height = boxSizeHeight + 150;
 
     svg = d3.select("#window").append("svg")
@@ -127,11 +129,40 @@
         .attr("version", 1.1)
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(5,5)");
 
-    // define arrow-head, generate it with data?
-    d3.select("#window").select("svg")
-        .append("defs")
+    // Group the rect and the text
+    boxData = svg.selectAll("g.boxes")
+        .data(data.list)
+        .enter()
+        .append("g")
+        .attr("class", "boxes")
+        .attr("transform", translateX);
+
+    boxData.append("rect")
+        .attr("width", function (d) { return d.width; })
+        .attr("height", boxSizeHeight)
+        .style("border", "solid 1px #000")
+        .style("stroke", "#000")
+        .style("stroke-width", "2px")
+        .style("fill", function (d) {
+            return colorMap[d.color] || colorMap.orange;
+        });
+
+    boxData.append("text")
+        .style("font-size", "0.8em")
+        .style("fill", "#000")
+        .attr("text-anchor", "middle")
+        .attr("dy", boxSizeHeight / 2 * 1.25)
+        .attr("dx", function (d) { return d.width / 2; })
+        .text(function (d) {
+            return d.id;
+        });
+
+    // Define the arrow head
+    svg.append("defs")
         .append("marker")
         .attr("id", "ArrowFillLeft")
         .attr("viewBox", "0 0 10 10")
@@ -144,45 +175,30 @@
         .append("path")
         .attr("d", "M 10 0 L 0 5 L 10 10 z");
 
-    // Arrows!
-    svg.selectAll("line")
+    // Group arrows and arrow labels
+    arrow = svg.selectAll("g.arrows")
         .data(data.list.filter(function (d) {
             return d.hasOwnProperty("arrow");
         }))
         .enter()
-        .append("line")
-        .attr("x1", translateArrowX)
-        .attr("x2", translateArrowX)
-        .attr("y1", 55.5)
-        .attr("y2", 100)
+        .append("g")
+        .attr("class", "arrows")
+        .attr("transform", translateArrow);
+
+    arrow.append("line")
+        .attr("y2", 45.5)
         .attr("fill", "none")
         .attr("stroke", "#000")
         .attr("stroke-width", 3)
         .attr("marker-start", "url(#ArrowFillLeft)");
 
-    bitData = svg.selectAll("g.bit")
-        .data(data.list)
-        .enter()
-        .append("g")
-        .attr("transform", translateX);
-
-    bitData.append("rect")
-        .attr("width", function (d) { return d.width; })
-        .attr("height", boxSizeHeight)
-        .style("border", "solid 1px #000")
-        .style("stroke", "#000")
-        .style("stroke-width", "2px")
-        .style("fill", function (d) {
-            return colorMap[d.color] || colorMap.orange;
-        });
-
-    bitData.append("text")
+    arrow.append("text")
         .style("font-size", "0.8em")
         .style("fill", "#000")
         .attr("text-anchor", "middle")
-        .attr("dy", boxSizeHeight / 2 * 1.2)
-        .attr("dx", function (d) { return d.width / 2; })
+        .attr("dy", 60)
+        .attr("dx", 0)
         .text(function (d) {
-            return d.id;
+            return d.arrow;
         });
 }());
