@@ -51,9 +51,11 @@
         }, {
             width: 33,
             type: "pending",
-            arrow: "VT(R)"
+            arrow: "VT(R),VT(X)"
         }, {
-            type: "nack"
+            type: "nack",
+            arrow: "NACK",
+            arrow_length: 65
         }, {
             width: 110,
             type: "ack"
@@ -178,7 +180,7 @@
         .attr("transform", translateArrow);
 
     arrow.append("line")
-        .attr("y2", 45.5)
+        .attr("y2", function (d) { return (d.arrow_length || 45) + 0.5; })
         .attr("fill", "none")
         .attr("stroke", "#000")
         .attr("stroke-width", 3)
@@ -188,7 +190,7 @@
         .style("font-size", "0.8em")
         .style("fill", "#000")
         .attr("text-anchor", "middle")
-        .attr("dy", 60)
+        .attr("dy", function (d) { return (d.arrow_length || 45) + 15; })
         .text(function (d) {
             return d.arrow;
         });
