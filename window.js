@@ -32,163 +32,137 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+var protoViz = {};
+
 /*globals d3 */
 (function () {
     'use strict';
-    var svg, svgBits, boxData, data, dw, dh, width, height, html, arrow,
-        boxSizeHeight = 50,
-        defaultWidth = 50,
-        send_window = [{
-            type: "ack"
-        }, {
-            width: 100,
-            type: "ack"
-        }, {
-            width: 33,
-            type: "pending",
-            arrow: ["VT(R)", "VT(X)", "VT(H)"]
-        }, {
-            type: "nack",
-            arrow: ["NACK"]
-        }, {
-            width: 110,
-            type: "ack"
-        }, {
-            width: 100,
-            type: "nack"
-        }, {
-            width: 40,
-            type: "nack"
-        }, {
-            width: 60,
-            type: "ack"
-        }, {
-            type: "unused"
-        }, {
-            type: "unused",
-            id: "..."
-        }, {
-            type: "unused",
-            id: 514,
-            arrow: ["VT(MR)"]
-        }],
-        typeToColorMap = {
-            ack: "#4DAF4A",
-            pending: "#FF7F00",
-            nack: "#E41A1C",
-            unused: "#377EB8"
-        };
 
-    function translateX(d) {
-        return "translate(" + (d.offset) + ",0)";
-    }
+    protoViz.window = function (data) {
+        var svg, svgBits, boxData, dw, dh, width, height, html, arrow,
+            boxSizeHeight = 50,
+            defaultWidth = 50,
+            typeToColorMap = {
+                ack: "#4DAF4A",
+                pending: "#FF7F00",
+                nack: "#E41A1C",
+                unused: "#377EB8"
+            };
 
-    function arrowX(d) {
-        return d.offset + d.width / 2;
-    }
+        function translateX(d) {
+            return "translate(" + (d.offset) + ",0)";
+        }
 
-    function translateArrow(d) {
-        return "translate(" + (Math.floor(arrowX(d)) + 0.5) + "," + 55.5 + ")";
-    }
+        function arrowX(d) {
+            return d.offset + d.width / 2;
+        }
 
-    function addOffsetAndId(bits) {
-        return bits.reduce(function (acc, val) {
-            if (!val.hasOwnProperty("width")) {
-                val.width = defaultWidth;
-            }
-            val.offset = acc.width;
-            if (!val.hasOwnProperty("id")) {
-                val.id = acc.count;
-            }
-            acc.list.push(val);
-            acc.width += val.width;
-            acc.count += 1;
-            return acc;
-        }, {list: [], width: 0, count: 0});
-    }
+        function translateArrow(d) {
+            return "translate(" + (Math.floor(arrowX(d)) + 0.5) + "," + 55.5 + ")";
+        }
 
-    data = addOffsetAndId(send_window);
-    dh = data.length;
-    width = data.width + 100;
-    height = boxSizeHeight + 150;
+        function addOffsetAndId(bits) {
+            return bits.reduce(function (acc, val) {
+                if (!val.hasOwnProperty("width")) {
+                    val.width = defaultWidth;
+                }
+                val.offset = acc.width;
+                if (!val.hasOwnProperty("id")) {
+                    val.id = acc.count;
+                }
+                acc.list.push(val);
+                acc.width += val.width;
+                acc.count += 1;
+                return acc;
+            }, {list: [], width: 0, count: 0});
+        }
 
-    svg = d3.select("#window").append("svg")
-        .attr("title", "a packet")
-        .attr("version", 1.1)
-        .attr("xmlns", "http://www.w3.org/2000/svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(5,5)");
+        data = addOffsetAndId(data);
+        dh = data.length;
+        width = data.width + 100;
+        height = boxSizeHeight + 150;
 
-    // Group the rect and the text
-    boxData = svg.selectAll("g.boxes")
-        .data(data.list)
-        .enter()
-        .append("g")
-        .attr("class", "boxes")
-        .attr("transform", translateX);
+        svg = d3.select("#window").append("svg")
+            .attr("title", "a packet")
+            .attr("version", 1.1)
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(5,5)");
 
-    boxData.append("rect")
-        .attr("width", function (d) { return d.width; })
-        .attr("height", boxSizeHeight)
-        .style("border", "solid 1px #000")
-        .style("stroke", "#000")
-        .style("stroke-width", "2px")
-        .style("fill", function (d) {
-            return typeToColorMap[d.type] || typeToColorMap.unused;
-        });
+        // Group the rect and the text
+        boxData = svg.selectAll("g.boxes")
+            .data(data.list)
+            .enter()
+            .append("g")
+            .attr("class", "boxes")
+            .attr("transform", translateX);
 
-    boxData.append("text")
-        .style("font-size", "0.8em")
-        .style("fill", "#000")
-        .attr("text-anchor", "middle")
-        .attr("dy", boxSizeHeight / 2 * 1.25)
-        .attr("dx", function (d) { return d.width / 2; })
-        .text(function (d) {
-            return d.id;
-        });
+        boxData.append("rect")
+            .attr("width", function (d) { return d.width; })
+            .attr("height", boxSizeHeight)
+            .style("border", "solid 1px #000")
+            .style("stroke", "#000")
+            .style("stroke-width", "2px")
+            .style("fill", function (d) {
+                return typeToColorMap[d.type] || typeToColorMap.unused;
+            });
 
-    // Define the arrow head
-    svg.append("defs")
-        .append("marker")
-        .attr("id", "ArrowFillLeft")
-        .attr("viewBox", "0 0 10 10")
-        .attr("refX", 5)
-        .attr("refY", 5)
-        .attr("markerUnits", "strokeWidth")
-        .attr("markerwidth", 18)
-        .attr("markerHeight", 6)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M 10 0 L 0 5 L 10 10 z");
+        boxData.append("text")
+            .style("font-size", "0.8em")
+            .style("fill", "#000")
+            .attr("text-anchor", "middle")
+            .attr("dy", boxSizeHeight / 2 * 1.25)
+            .attr("dx", function (d) { return d.width / 2; })
+            .text(function (d) {
+                return d.id;
+            });
 
-    // Group arrows and arrow labels
-    arrow = svg.selectAll("g.arrows")
-        .data(data.list.filter(function (d) {
-            return d.hasOwnProperty("arrow");
-        }))
-        .enter()
-        .append("g")
-        .attr("class", "arrows")
-        .attr("transform", translateArrow);
+        // Define the arrow head
+        svg.append("defs")
+            .append("marker")
+            .attr("id", "ArrowFillLeft")
+            .attr("viewBox", "0 0 10 10")
+            .attr("refX", 5)
+            .attr("refY", 5)
+            .attr("markerUnits", "strokeWidth")
+            .attr("markerwidth", 18)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M 10 0 L 0 5 L 10 10 z");
 
-    arrow.append("line")
-        .attr("y2", function (d) { return 45 + 0.5; })
-        .attr("fill", "none")
-        .attr("stroke", "#000")
-        .attr("stroke-width", 3)
-        .attr("marker-start", "url(#ArrowFillLeft)");
+        // Group arrows and arrow labels
+        arrow = svg.selectAll("g.arrows")
+            .data(data.list.filter(function (d) {
+                return d.hasOwnProperty("arrow");
+            }))
+            .enter()
+            .append("g")
+            .attr("class", "arrows")
+            .attr("transform", translateArrow);
 
-    arrow.selectAll("text")
-        .data(function (d) { return d.arrow; })
-        .enter()
-        .append("text")
-        .style("font-size", "0.8em")
-        .style("fill", "#000")
-        .attr("text-anchor", "middle")
-        .attr("dy", function (d, i) { return 45 + 15 * (i + 1); })
-        .text(function (d) {
-            return d;
-        });
+        arrow.append("line")
+            .attr("y2", function (d) { return 45 + 0.5; })
+            .attr("fill", "none")
+            .attr("stroke", "#000")
+            .attr("stroke-width", 3)
+            .attr("marker-start", "url(#ArrowFillLeft)");
+
+        arrow.selectAll("text")
+            .data(function (d) { return d.arrow; })
+            .enter()
+            .append("text")
+            .style("font-size", "0.8em")
+            .style("fill", "#000")
+            .attr("text-anchor", "middle")
+            .attr("dy", function (d, i) { return 45 + 15 * (i + 1); })
+            .text(function (d) {
+                return d;
+            });
+    };
+    d3.json("sendWindow.json", function (data) {
+        protoViz.window(data);
+    });
 }());
