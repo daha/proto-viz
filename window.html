@@ -4,7 +4,8 @@
 <title>An experiment to visualize packets</title>
 <header></header>
 
-<div id="window"></div>
+<div id="window1"></div>
+<div id="window2"></div>
 <div id="link"></div>
 
 <script src="assets/d3.v2.min.js" type="text/javascript" charset="utf-8"></script>
@@ -12,7 +13,10 @@
 <script src="window.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
  d3.json("sendWindow.json", function (data) {
-        protoViz.window("#window", data);
+        protoViz.window("#window2", data);
+    });
+ d3.json("receiveWindow.json", function (data) {
+        protoViz.window("#window1", data);
     });
 </script>
 <footer>

@@ -1,11 +1,10 @@
 [{"type": "ack"
 }, {
-    "width": 100,
     "type": "ack"
 }, {
     "width": 33,
     "type": "pending",
-    "arrow": ["VT(R)", "VT(X)", "VT(H)"]
+    "arrow": ["VR(R)", "VR(X)", "VR(H)"]
 }, {
     "type": "nack"
 }, {
@@ -28,5 +27,5 @@
 }, {
     "type": "unused",
     "id": 514,
-    "arrow": ["VT(MR)"]
+    "arrow": ["VR(MR)"]
 }]
