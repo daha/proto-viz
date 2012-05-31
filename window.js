@@ -46,11 +46,10 @@
         }, {
             width: 33,
             type: "pending",
-            arrow: "VT(R),VT(X)"
+            arrow: ["VT(R)", "VT(X)", "VT(H)"]
         }, {
             type: "nack",
-            arrow: "NACK",
-            arrow_length: 65
+            arrow: ["NACK"]
         }, {
             width: 110,
             type: "ack"
@@ -71,7 +70,7 @@
         }, {
             type: "unused",
             id: 514,
-            arrow: "VT(MR)"
+            arrow: ["VT(MR)"]
         }],
         typeToColorMap = {
             ack: "#4DAF4A",
@@ -175,18 +174,21 @@
         .attr("transform", translateArrow);
 
     arrow.append("line")
-        .attr("y2", function (d) { return (d.arrow_length || 45) + 0.5; })
+        .attr("y2", function (d) { return 45 + 0.5; })
         .attr("fill", "none")
         .attr("stroke", "#000")
         .attr("stroke-width", 3)
         .attr("marker-start", "url(#ArrowFillLeft)");
 
-    arrow.append("text")
+    arrow.selectAll("text")
+        .data(function (d) { return d.arrow; })
+        .enter()
+        .append("text")
         .style("font-size", "0.8em")
         .style("fill", "#000")
         .attr("text-anchor", "middle")
-        .attr("dy", function (d) { return (d.arrow_length || 45) + 15; })
+        .attr("dy", function (d, i) { return 45 + 15 * (i + 1); })
         .text(function (d) {
-            return d.arrow;
+            return d;
         });
 }());
