@@ -163,4 +163,10 @@
                 return d;
             });
     };
+
+    protoViz.jsonWindow = function (url, selector) {
+        d3.json(url, function (data) {
+            protoViz.window(selector, data);
+        });
+    };
 }());

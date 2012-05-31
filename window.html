@@ -1,23 +1,23 @@
 <!DOCYTPE html>
 <meta charset="utf-8">
-<link rel="stylesheet" href="default.css"/>
-<title>An experiment to visualize packets</title>
+<link rel="stylesheet" href="css/default.css"/>
+<title>An experiment to visualize windows</title>
 <header></header>
 
 <div id="window1"></div>
 <div id="window2"></div>
 <div id="link"></div>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
+        type="text/javascript"></script>
 <script src="assets/d3.v2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="src/protoViz.js" type="text/javascript" charset="utf-8"></script>
 <script src="src/window.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
- d3.json("json/sendWindow.json", function (data) {
-        protoViz.window("#window2", data);
-    });
- d3.json("json/receiveWindow.json", function (data) {
-        protoViz.window("#window1", data);
-    });
+    $(document).ready(function() {
+        protoViz.jsonWindow("json/receiveWindow.json", "#window1");
+        protoViz.jsonWindow("json/sendWindow.json", "#window2");
+    })
 </script>
 <footer>
     <aside>Copyright &copy; 2012, David Haglund</aside>
