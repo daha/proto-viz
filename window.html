@@ -12,10 +12,10 @@
 <script src="protoViz.js" type="text/javascript" charset="utf-8"></script>
 <script src="window.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
- d3.json("sendWindow.json", function (data) {
+ d3.json("json/sendWindow.json", function (data) {
         protoViz.window("#window2", data);
     });
- d3.json("receiveWindow.json", function (data) {
+ d3.json("json/receiveWindow.json", function (data) {
         protoViz.window("#window1", data);
     });
 </script>
