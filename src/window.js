@@ -69,7 +69,7 @@
                     val.id = acc.count;
                 }
                 if (val.arrow) {
-                    acc.max_arrow_labels = d3.max([val.arrow.length, acc.max_arrow_labels]);
+                    acc.max_arrow_labels = Math.max(val.arrow.length, acc.max_arrow_labels);
                 }
                 acc.list.push(val);
                 acc.width += val.width;
