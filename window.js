@@ -36,7 +36,7 @@
 (function () {
     'use strict';
 
-    protoViz.window = function (data) {
+    protoViz.window = function (selector, data) {
         var svg, svgBits, boxData, dw, dh, width, height, html, arrow,
             boxSizeHeight = 50,
             defaultWidth = 50,
@@ -59,8 +59,8 @@
             return "translate(" + (Math.floor(arrowX(d)) + 0.5) + "," + 55.5 + ")";
         }
 
-        function addOffsetAndId(bits) {
-            return bits.reduce(function (acc, val) {
+        function addOffsetAndId(dataToProcess) {
+            return dataToProcess.reduce(function (acc, val) {
                 if (!val.hasOwnProperty("width")) {
                     val.width = defaultWidth;
                 }
@@ -68,19 +68,22 @@
                 if (!val.hasOwnProperty("id")) {
                     val.id = acc.count;
                 }
+                if (val.arrow) {
+                    acc.max_arrow_labels = d3.max([val.arrow.length, acc.max_arrow_labels]);
+                }
                 acc.list.push(val);
                 acc.width += val.width;
                 acc.count += 1;
                 return acc;
-            }, {list: [], width: 0, count: 0});
+            }, {list: [], width: 0, count: 0, max_arrow_labels: 0});
         }
 
         data = addOffsetAndId(data);
         dh = data.length;
-        width = data.width + 100;
-        height = boxSizeHeight + 150;
+        width = data.width + 10;
+        height = boxSizeHeight + data.max_arrow_labels * 15 + 65;
 
-        svg = d3.select("#window").append("svg")
+        svg = d3.select(selector).append("svg")
             .attr("title", "a packet")
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
