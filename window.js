@@ -31,10 +31,8 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
+/*globals d3,protoViz */
 
-var protoViz = {};
-
-/*globals d3 */
 (function () {
     'use strict';
 
@@ -162,7 +160,4 @@ var protoViz = {};
                 return d;
             });
     };
-    d3.json("sendWindow.json", function (data) {
-        protoViz.window(data);
-    });
 }());
