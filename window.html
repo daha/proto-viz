@@ -15,8 +15,11 @@
 <script src="src/window.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function() {
-        protoViz.jsonWindow("json/receiveWindow.json", "#window1");
-        protoViz.jsonWindow("json/sendWindow.json", "#window2");
+        var receiveWindow = new protoViz.Window("#window1"),
+            sendWindow = new protoViz.Window("#window2");
+
+        receiveWindow.json("json/receiveWindow.json");
+        sendWindow.json("json/sendWindow.json");
     })
 </script>
 <footer>

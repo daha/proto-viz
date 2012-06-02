@@ -33,67 +33,65 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 /*globals d3,protoViz */
 
-(function () {
+protoViz.Window = function (selector) {
     'use strict';
+    var svgBits, boxData, dw, dh, width, height, html, arrow,
+        that = this,
+        boxSizeHeight = 50,
+        defaultWidth = 50,
+        typeToColorMap = {
+            ack: "#4DAF4A",
+            pending: "#FF7F00",
+            nack: "#E41A1C",
+            unused: "#377EB8"
+        },
+        rootSvg = d3.select(selector).append("svg").attr("title", "a packet").attr("version", 1.1).attr("xmlns", "http://www.w3.org/2000/svg"),
+        windowSvg = rootSvg.append("g").attr("transform", "translate(5,5)");
 
-    protoViz.window = function (selector, data) {
-        var svg, svgBits, boxData, dw, dh, width, height, html, arrow,
-            boxSizeHeight = 50,
-            defaultWidth = 50,
-            typeToColorMap = {
-                ack: "#4DAF4A",
-                pending: "#FF7F00",
-                nack: "#E41A1C",
-                unused: "#377EB8"
-            };
+    function translateX(d) {
+        return "translate(" + (d.offset) + ",0)";
+    }
 
-        function translateX(d) {
-            return "translate(" + (d.offset) + ",0)";
-        }
+    function arrowX(d) {
+        return d.offset + d.width / 2;
+    }
 
-        function arrowX(d) {
-            return d.offset + d.width / 2;
-        }
+    function translateArrow(d) {
+        return "translate(" + (Math.floor(arrowX(d)) + 0.5) + "," + 55.5 + ")";
+    }
 
-        function translateArrow(d) {
-            return "translate(" + (Math.floor(arrowX(d)) + 0.5) + "," + 55.5 + ")";
-        }
+    function transformData(dataToProcess) {
+        return dataToProcess.reduce(function (acc, val) {
+            if (!val.hasOwnProperty("width")) {
+                val.width = defaultWidth;
+            }
+            val.offset = acc.width;
+            if (!val.hasOwnProperty("id")) {
+                val.id = acc.count;
+            }
+            if (val.arrow) {
+                acc.max_arrow_labels = Math.max(val.arrow.length, acc.max_arrow_labels);
+            }
+            acc.list.push(val);
+            acc.width += val.width;
+            acc.count += 1;
+            return acc;
+        }, {list: [], width: 0, count: 0, max_arrow_labels: 0});
+    }
 
-        function addOffsetAndId(dataToProcess) {
-            return dataToProcess.reduce(function (acc, val) {
-                if (!val.hasOwnProperty("width")) {
-                    val.width = defaultWidth;
-                }
-                val.offset = acc.width;
-                if (!val.hasOwnProperty("id")) {
-                    val.id = acc.count;
-                }
-                if (val.arrow) {
-                    acc.max_arrow_labels = Math.max(val.arrow.length, acc.max_arrow_labels);
-                }
-                acc.list.push(val);
-                acc.width += val.width;
-                acc.count += 1;
-                return acc;
-            }, {list: [], width: 0, count: 0, max_arrow_labels: 0});
-        }
-
-        data = addOffsetAndId(data);
+    // TODO: split this method into smaller methods
+    this.update = function (inData) {
+        var data = transformData(inData);
         dh = data.length;
         width = data.width + 10;
         height = boxSizeHeight + data.max_arrow_labels * 15 + 65;
 
-        svg = d3.select(selector).append("svg")
-            .attr("title", "a packet")
-            .attr("version", 1.1)
-            .attr("xmlns", "http://www.w3.org/2000/svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", "translate(5,5)");
+        // Update the size to fit the data
+        rootSvg.attr("width", width)
+            .attr("height", height);
 
         // Group the rect and the text
-        boxData = svg.selectAll("g.boxes")
+        boxData = windowSvg.selectAll("g.boxes")
             .data(data.list)
             .enter()
             .append("g")
@@ -121,7 +119,7 @@
             });
 
         // Define the arrow head
-        svg.append("defs")
+        windowSvg.append("defs")
             .append("marker")
             .attr("id", "ArrowFillLeft")
             .attr("viewBox", "0 0 10 10")
@@ -135,7 +133,7 @@
             .attr("d", "M 10 0 L 0 5 L 10 10 z");
 
         // Group arrows and arrow labels
-        arrow = svg.selectAll("g.arrows")
+        arrow = windowSvg.selectAll("g.arrows")
             .data(data.list.filter(function (d) {
                 return d.hasOwnProperty("arrow");
             }))
@@ -164,9 +162,9 @@
             });
     };
 
-    protoViz.jsonWindow = function (url, selector) {
+    this.json = function (url) {
         d3.json(url, function (data) {
-            protoViz.window(selector, data);
+            that.update(data);
         });
     };
-}());
+}
