@@ -18,6 +18,7 @@
         d3.json("json/multi.json", function (data) {
             testWindow.update(data[0].data);
 
+            // TODO: add the delays into the Window object
             setTimeout(function () {
                 testWindow.update(data[1].data);
             }, 5000);

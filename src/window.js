@@ -36,6 +36,7 @@
 protoViz.Window = function (selector) {
     'use strict';
     var svgBits, box, boxEnter, dw, dh, width, height, html, arrow, arrowEnter,
+        oldMaxArrowLabels = 0,
         that = this,
         boxSizeHeight = 50,
         defaultWidth = 50,
@@ -81,13 +82,13 @@ protoViz.Window = function (selector) {
                 );
             }
             if (val.arrow) {
-                acc.max_arrow_labels = Math.max(val.arrow.length, acc.max_arrow_labels);
+                acc.maxArrowLabels = Math.max(val.arrow.length, acc.maxArrowLabels);
             }
             acc.list.push(val);
             acc.width += val.width;
             acc.count += 1;
             return acc;
-        }, {list: [], arrows: [], width: 0, count: 0, max_arrow_labels: 0});
+        }, {list: [], arrows: [], width: 0, count: 0, maxArrowLabels: 0});
     }
 
     // TODO: split this method into smaller methods
@@ -95,7 +96,8 @@ protoViz.Window = function (selector) {
         var data = transformData(inData);
         dh = data.length;
         width = data.width + 10;
-        height = boxSizeHeight + data.max_arrow_labels * 15 + 65;
+        height = boxSizeHeight + Math.max(oldMaxArrowLabels, data.maxArrowLabels) * 15 + 65;
+        oldMaxArrowLabels = data.maxArrowLabels;
 
         // Update the size to fit the data
         rootSvg.attr("width", width)
@@ -162,7 +164,9 @@ protoViz.Window = function (selector) {
         arrowEnter.append("text");
 
         // Static attributes
-        arrow.attr("transform", translateArrow);
+        arrow.transition()
+            .duration(1000)
+            .attr("transform", translateArrow);
 
         arrow.select("line")
             .attr("y2", function (d) { return 45 + 0.5; })
@@ -175,10 +179,12 @@ protoViz.Window = function (selector) {
             .style("font-size", "0.8em")
             .style("fill", "#000")
             .attr("text-anchor", "middle")
-            .attr("dy", function (d) { return 60 + 15 * d.index; })
             .text(function (d) {
                 return d.text;
-            });
+            })
+            .transition()
+            .duration(1000)
+            .attr("dy", function (d) { return 60 + 15 * d.index; });
     };
 
     this.json = function (url) {
