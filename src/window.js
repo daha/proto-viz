@@ -57,7 +57,7 @@ protoViz.Window = function (selector) {
     }
 
     function translateArrow(d) {
-        return "translate(" + (Math.floor(arrowX(d)) + 0.5) + "," + 55.5 + ")";
+        return "translate(" + d.x + "," + 55.5 + ")";
     }
 
     function transformData(dataToProcess) {
@@ -69,6 +69,17 @@ protoViz.Window = function (selector) {
             if (!val.hasOwnProperty("id")) {
                 val.id = acc.count;
             }
+            if (val.hasOwnProperty("arrow")) {
+                acc.arrows = acc.arrows.concat(
+                    val.arrow.map(function (d, i) {
+                        return {
+                            text: d,
+                            index: i,
+                            x: arrowX(val)
+                        };
+                    })
+                );
+            }
             if (val.arrow) {
                 acc.max_arrow_labels = Math.max(val.arrow.length, acc.max_arrow_labels);
             }
@@ -76,7 +87,7 @@ protoViz.Window = function (selector) {
             acc.width += val.width;
             acc.count += 1;
             return acc;
-        }, {list: [], width: 0, count: 0, max_arrow_labels: 0});
+        }, {list: [], arrows: [], width: 0, count: 0, max_arrow_labels: 0});
     }
 
     // TODO: split this method into smaller methods
@@ -134,9 +145,7 @@ protoViz.Window = function (selector) {
 
         // Group arrows and arrow labels
         arrow = windowSvg.selectAll("g.arrows")
-            .data(data.list.filter(function (d) {
-                return d.hasOwnProperty("arrow");
-            }))
+            .data(data.arrows)
             .enter()
             .append("g")
             .attr("class", "arrows")
@@ -149,16 +158,13 @@ protoViz.Window = function (selector) {
             .attr("stroke-width", 3)
             .attr("marker-start", "url(#ArrowFillLeft)");
 
-        arrow.selectAll("text")
-            .data(function (d) { return d.arrow; })
-            .enter()
-            .append("text")
+        arrow.append("text")
             .style("font-size", "0.8em")
             .style("fill", "#000")
             .attr("text-anchor", "middle")
-            .attr("dy", function (d, i) { return 45 + 15 * (i + 1); })
+            .attr("dy", function (d) { return 60 + 15 * d.index; })
             .text(function (d) {
-                return d;
+                return d.text;
             });
     };
 
