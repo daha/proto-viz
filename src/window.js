@@ -203,4 +203,4 @@ protoViz.Window = function (selector) {
             that.update(data);
         });
     };
-}
+};
