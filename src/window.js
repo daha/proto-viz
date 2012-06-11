@@ -40,6 +40,7 @@ protoViz.Window = function (selector) {
         that = this,
         boxSizeHeight = 50,
         defaultWidth = 50,
+        transitionDuration = 2000,
         typeToColorMap = {
             ack: "#4DAF4A",
             pending: "#FF7F00",
@@ -57,8 +58,12 @@ protoViz.Window = function (selector) {
         return d.offset + d.width / 2;
     }
 
+    function initialTranslateArrow(d) {
+        return "translate(0,55.5)";
+    }
+
     function translateArrow(d) {
-        return "translate(" + d.x + "," + 55.5 + ")";
+        return "translate(" + d.x + ",55.5)";
     }
 
     function transformData(dataToProcess) {
@@ -113,7 +118,8 @@ protoViz.Window = function (selector) {
             .attr("class", "boxes")
             .attr("transform", translateX);
 
-        boxEnter.append("rect");
+        boxEnter.append("rect")
+            .style("fill", "#fff");
 
         boxEnter.append("text")
             .style("font-size", "0.8em")
@@ -131,6 +137,8 @@ protoViz.Window = function (selector) {
             .style("border", "solid 1px #000")
             .style("stroke", "#000")
             .style("stroke-width", "2px")
+            .transition()
+            .duration(transitionDuration)
             .style("fill", function (d) {
                 return typeToColorMap[d.type] || typeToColorMap.unused;
             });
@@ -157,15 +165,18 @@ protoViz.Window = function (selector) {
         // Enter
         arrowEnter = arrow.enter()
             .append("g")
-            .attr("class", "arrows");
+            .attr("class", "arrows")
+            .attr("transform", initialTranslateArrow);
 
-        arrowEnter.append("line");
+        arrowEnter.append("line")
+            .attr("y2", function (d) { return 45 + 0.5; });
 
-        arrowEnter.append("text");
+        arrowEnter.append("text")
+            .attr("dy", function (d) { return 60 + 15 * d.index; });
 
         // Static attributes
         arrow.transition()
-            .duration(1000)
+            .duration(transitionDuration)
             .attr("transform", translateArrow);
 
         arrow.select("line")
@@ -183,7 +194,7 @@ protoViz.Window = function (selector) {
                 return d.text;
             })
             .transition()
-            .duration(1000)
+            .duration(transitionDuration)
             .attr("dy", function (d) { return 60 + 15 * d.index; });
     };
 
