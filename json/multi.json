@@ -1,0 +1,116 @@
+[
+    {
+        "data": [
+            {
+                "type": "ack"
+            },
+            {
+                "arrow": [
+                    "AB(C)",
+                    "AB(D)",
+                    "AB(E)"
+                ],
+                "type": "pending"
+            },
+            {
+                "type": "nack"
+            },
+            {
+                "type": "ack"
+            },
+            {
+                "type": "unused"
+            },
+            {
+                "id": "...",
+                "type": "unused"
+            },
+            {
+                "arrow": [
+                    "AB(F)"
+                ],
+                "id": 514,
+                "type": "unused"
+            }
+        ],
+        "label": "foo"
+    },
+    {
+        "data": [
+            {
+                "type": "ack"
+            },
+            {
+                "arrow": [
+                    "AB(C)"
+                ],
+                "type": "nack"
+            },
+            {
+                "arrow": [
+                    "AB(D)"
+                ],
+                "type": "pending"
+            },
+            {
+                "arrow": [
+                    "AB(E)"
+                ],
+                "type": "ack"
+            },
+            {
+                "type": "unused"
+            },
+            {
+                "id": "...",
+                "type": "unused"
+            },
+            {
+                "arrow": [
+                    "AB(F)"
+                ],
+                "id": 514,
+                "type": "unused"
+            }
+        ],
+        "label": "foo 2"
+    },
+    {
+        "data": [
+            {
+                "type": "ack"
+            },
+            {
+                "type": "ack"
+            },
+            {
+                "type": "ack"
+            },
+            {
+                "type": "ack"
+            },
+            {
+                "arrow": [
+                    "AB(C)",
+                    "AB(D)"
+                ],
+                "type": "unused"
+            },
+            {
+                "arrow": [
+                    "AB(E)"
+                ],
+                "id": "...",
+                "type": "unused"
+            },
+            {
+                "arrow": [
+                    "AB(F)"
+                ],
+                "id": 514,
+                "type": "unused"
+            }
+        ],
+        "label": "foo 3"
+    }
+]

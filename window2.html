@@ -1,0 +1,33 @@
+<!DOCYTPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/default.css"/>
+<title>An experiment to visualize windows</title>
+<header></header>
+
+<div id="window"></div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
+        type="text/javascript"></script>
+<script src="assets/d3.v2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/protoViz.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/window.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        var testWindow = new protoViz.Window("#window");
+
+        d3.json("json/multi.json", function (data) {
+            testWindow.update(data[0].data);
+
+            setTimeout(function () {
+                testWindow.update(data[1].data);
+            }, 5000);
+
+            setTimeout(function () {
+                testWindow.update(data[2].data);
+            }, 10000);
+        });
+    })
+</script>
+<footer>
+    <aside>Copyright &copy; 2012, David Haglund</aside>
+</footer>

@@ -35,7 +35,7 @@
 
 protoViz.Window = function (selector) {
     'use strict';
-    var svgBits, boxData, dw, dh, width, height, html, arrow,
+    var svgBits, box, boxEnter, dw, dh, width, height, html, arrow, arrowEnter,
         that = this,
         boxSizeHeight = 50,
         defaultWidth = 50,
@@ -101,25 +101,19 @@ protoViz.Window = function (selector) {
         rootSvg.attr("width", width)
             .attr("height", height);
 
-        // Group the rect and the text
-        boxData = windowSvg.selectAll("g.boxes")
-            .data(data.list)
-            .enter()
+         // Group the rect and the text
+        box = windowSvg.selectAll("g.boxes")
+            .data(data.list);
+
+        // Enter
+        boxEnter = box.enter()
             .append("g")
             .attr("class", "boxes")
             .attr("transform", translateX);
 
-        boxData.append("rect")
-            .attr("width", function (d) { return d.width; })
-            .attr("height", boxSizeHeight)
-            .style("border", "solid 1px #000")
-            .style("stroke", "#000")
-            .style("stroke-width", "2px")
-            .style("fill", function (d) {
-                return typeToColorMap[d.type] || typeToColorMap.unused;
-            });
+        boxEnter.append("rect");
 
-        boxData.append("text")
+        boxEnter.append("text")
             .style("font-size", "0.8em")
             .style("fill", "#000")
             .attr("text-anchor", "middle")
@@ -127,6 +121,16 @@ protoViz.Window = function (selector) {
             .attr("dx", function (d) { return d.width / 2; })
             .text(function (d) {
                 return d.id;
+            });
+
+        // static position
+        box.select("rect").attr("width", function (d) { return d.width; })
+            .attr("height", boxSizeHeight)
+            .style("border", "solid 1px #000")
+            .style("stroke", "#000")
+            .style("stroke-width", "2px")
+            .style("fill", function (d) {
+                return typeToColorMap[d.type] || typeToColorMap.unused;
             });
 
         // Define the arrow head
@@ -143,22 +147,31 @@ protoViz.Window = function (selector) {
             .append("path")
             .attr("d", "M 10 0 L 0 5 L 10 10 z");
 
+
         // Group arrows and arrow labels
         arrow = windowSvg.selectAll("g.arrows")
-            .data(data.arrows)
-            .enter()
-            .append("g")
-            .attr("class", "arrows")
-            .attr("transform", translateArrow);
+            .data(data.arrows);
 
-        arrow.append("line")
+        // Enter
+        arrowEnter = arrow.enter()
+            .append("g")
+            .attr("class", "arrows");
+
+        arrowEnter.append("line");
+
+        arrowEnter.append("text");
+
+        // Static attributes
+        arrow.attr("transform", translateArrow);
+
+        arrow.select("line")
             .attr("y2", function (d) { return 45 + 0.5; })
             .attr("fill", "none")
             .attr("stroke", "#000")
             .attr("stroke-width", 3)
             .attr("marker-start", "url(#ArrowFillLeft)");
 
-        arrow.append("text")
+        arrow.select("text")
             .style("font-size", "0.8em")
             .style("fill", "#000")
             .attr("text-anchor", "middle")
