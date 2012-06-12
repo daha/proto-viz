@@ -69,6 +69,10 @@ protoViz.Window = function (selector) {
         return "translate(" + d.x + ",55.5)";
     }
 
+    function translateBoxText(d) {
+        return "translate(" + (d.width / 2) + "," + (boxSizeHeight / 2 + boxTextSize / 2.5) + ")";
+    }
+
     function transformData(dataToProcess) {
         return dataToProcess.reduce(function (acc, val) {
             if (!val.hasOwnProperty("width")) {
@@ -127,9 +131,8 @@ protoViz.Window = function (selector) {
         boxEnter.append("text")
             .style("font-size", boxTextSize.toString() + "px")
             .style("fill", "#000")
-            .attr("transform", function (d) { return "translate(" + (d.width / 2) + ", 0)"; })
+            .attr("transform", translateBoxText)
             .attr("text-anchor", "middle")
-            .attr("dy", boxSizeHeight / 2 + boxTextSize / 2.5)
             .text(function (d) {
                 return d.id;
             });
