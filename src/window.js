@@ -44,6 +44,7 @@ protoViz.Window = function (selector) {
         boxTextSize = defaultTextSize,
         arrowTextSize = defaultTextSize,
         transitionDuration = 2000,
+        arrowIndexMap = d3.scale.ordinal().range(d3.range(10)),
         typeToColorMap = {
             ack: "#4DAF4A",
             pending: "#FF7F00",
@@ -83,15 +84,13 @@ protoViz.Window = function (selector) {
                 val.id = acc.count;
             }
             if (val.hasOwnProperty("arrow")) {
-                acc.arrows = acc.arrows.concat(
-                    val.arrow.map(function (d, i) {
-                        return {
-                            text: d,
-                            index: i,
-                            x: arrowX(val)
-                        };
-                    })
-                );
+                val.arrow.forEach(function (d, i) {
+                    acc.arrows[arrowIndexMap(d)] = {
+                        text: d,
+                        index: i,
+                        x: arrowX(val)
+                    };
+                });
             }
             if (val.arrow) {
                 acc.maxArrowLabels = Math.max(val.arrow.length, acc.maxArrowLabels);
