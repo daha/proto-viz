@@ -40,6 +40,9 @@ protoViz.Window = function (selector) {
         that = this,
         boxSizeHeight = 50,
         defaultWidth = 50,
+        defaultTextSize = 15,
+        boxTextSize = defaultTextSize,
+        arrowTextSize = defaultTextSize,
         transitionDuration = 2000,
         typeToColorMap = {
             ack: "#4DAF4A",
@@ -101,7 +104,7 @@ protoViz.Window = function (selector) {
         var data = transformData(inData);
         dh = data.length;
         width = data.width + 10;
-        height = boxSizeHeight + Math.max(oldMaxArrowLabels, data.maxArrowLabels) * 15 + 65;
+        height = boxSizeHeight + Math.max(oldMaxArrowLabels, data.maxArrowLabels) * arrowTextSize + 65;
         oldMaxArrowLabels = data.maxArrowLabels;
 
         // Update the size to fit the data
@@ -122,11 +125,11 @@ protoViz.Window = function (selector) {
             .style("fill", "#fff");
 
         boxEnter.append("text")
-            .style("font-size", "0.8em")
+            .style("font-size", boxTextSize.toString() + "px")
             .style("fill", "#000")
             .attr("transform", function (d) { return "translate(" + (d.width / 2) + ", 0)"; })
             .attr("text-anchor", "middle")
-            .attr("dy", boxSizeHeight / 2 * 1.25)
+            .attr("dy", boxSizeHeight / 2 + boxTextSize / 2.5)
             .text(function (d) {
                 return d.id;
             });
@@ -172,7 +175,7 @@ protoViz.Window = function (selector) {
             .attr("y2", function (d) { return 45 + 0.5; });
 
         arrowEnter.append("text")
-            .attr("dy", function (d) { return 60 + 15 * d.index; });
+            .attr("dy", function (d) { return 60 + arrowTextSize * d.index; });
 
         // Static attributes
         arrow.transition()
@@ -187,7 +190,7 @@ protoViz.Window = function (selector) {
             .attr("marker-start", "url(#ArrowFillLeft)");
 
         arrow.select("text")
-            .style("font-size", "0.8em")
+            .style("font-size", arrowTextSize.toString() + "px")
             .style("fill", "#000")
             .attr("text-anchor", "middle")
             .text(function (d) {
@@ -195,7 +198,7 @@ protoViz.Window = function (selector) {
             })
             .transition()
             .duration(transitionDuration)
-            .attr("dy", function (d) { return 60 + 15 * d.index; });
+            .attr("dy", function (d) { return 60 + arrowTextSize * d.index; });
     };
 
     this.json = function (url) {
