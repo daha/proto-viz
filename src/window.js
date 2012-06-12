@@ -124,9 +124,9 @@ protoViz.Window = function (selector) {
         boxEnter.append("text")
             .style("font-size", "0.8em")
             .style("fill", "#000")
+            .attr("transform", function (d) { return "translate(" + (d.width / 2) + ", 0)"; })
             .attr("text-anchor", "middle")
             .attr("dy", boxSizeHeight / 2 * 1.25)
-            .attr("dx", function (d) { return d.width / 2; })
             .text(function (d) {
                 return d.id;
             });
