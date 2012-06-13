@@ -51,6 +51,8 @@ protoViz.Window = function (selector) {
             nack: "#E41A1C",
             unused: "#377EB8"
         },
+        dataList = [],
+        dataIndex = 0,
         rootSvg = d3.select(selector).append("svg").attr("title", "a packet").attr("version", 1.1).attr("xmlns", "http://www.w3.org/2000/svg"),
         windowSvg = rootSvg.append("g").attr("transform", "translate(5,5)");
 
@@ -115,6 +117,29 @@ protoViz.Window = function (selector) {
             return acc;
         }, {list: [], arrows: [], width: 0, count: 0, maxArrowLabels: 0});
     }
+
+    this.show = function () {
+        that.update(dataList[dataIndex].data);
+    };
+
+    this.updateMulti = function (inData) {
+        dataList = inData;
+        dataIndex = 0;
+        that.show();
+    };
+
+    this.next = function () {
+        dataIndex = (dataIndex + 1) % dataList.length;
+        that.show();
+    };
+
+    this.prev = function () {
+        var nextIndex = (dataIndex - 1) % dataList.length;
+        if (nextIndex >= 0) {
+            dataIndex = nextIndex;
+        }
+        that.show();
+    };
 
     // TODO: split this method into smaller methods
     this.update = function (inData) {
