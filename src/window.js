@@ -148,6 +148,8 @@ protoViz.Window = function (selector) {
                 return typeToColorMap[d.type] || typeToColorMap.unused;
             });
 
+        box.exit().remove();
+
         // Define the arrow head
         windowSvg.append("defs")
             .append("marker")
@@ -201,6 +203,8 @@ protoViz.Window = function (selector) {
             .transition()
             .duration(transitionDuration)
             .attr("dy", function (d) { return 60 + arrowTextSize * d.index; });
+
+        arrow.exit().remove();
     };
 
     this.json = function (url) {
