@@ -54,6 +54,20 @@ protoViz.Window = function (selector) {
         rootSvg = d3.select(selector).append("svg").attr("title", "a packet").attr("version", 1.1).attr("xmlns", "http://www.w3.org/2000/svg"),
         windowSvg = rootSvg.append("g").attr("transform", "translate(5,5)");
 
+        // Define the arrow head
+    windowSvg.append("defs")
+        .append("marker")
+        .attr("id", "ArrowFillLeft")
+        .attr("viewBox", "0 0 10 10")
+        .attr("refX", 5)
+        .attr("refY", 5)
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerwidth", 18)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M 10 0 L 0 5 L 10 10 z");
+
     function translateX(d) {
         return "translate(" + (d.offset) + ",0)";
     }
@@ -149,21 +163,6 @@ protoViz.Window = function (selector) {
             });
 
         box.exit().remove();
-
-        // Define the arrow head
-        windowSvg.append("defs")
-            .append("marker")
-            .attr("id", "ArrowFillLeft")
-            .attr("viewBox", "0 0 10 10")
-            .attr("refX", 5)
-            .attr("refY", 5)
-            .attr("markerUnits", "strokeWidth")
-            .attr("markerwidth", 18)
-            .attr("markerHeight", 6)
-            .attr("orient", "auto")
-            .append("path")
-            .attr("d", "M 10 0 L 0 5 L 10 10 z");
-
 
         // Group arrows and arrow labels
         arrow = windowSvg.selectAll("g.arrows")
