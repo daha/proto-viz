@@ -54,7 +54,8 @@ protoViz.Window = function (selector) {
         dataList = [],
         dataIndex = 0,
         rootSvg = d3.select(selector).append("svg").attr("title", "a packet").attr("version", 1.1).attr("xmlns", "http://www.w3.org/2000/svg"),
-        windowSvg = rootSvg.append("g").attr("transform", "translate(5,5)");
+        windowSvg = rootSvg.append("g").attr("transform", "translate(5,5)"),
+        getDataFunction = function (d) { return d.data; };
 
         // Define the arrow head
     windowSvg.append("defs")
@@ -118,8 +119,12 @@ protoViz.Window = function (selector) {
         }, {list: [], arrows: [], width: 0, count: 0, maxArrowLabels: 0});
     }
 
+    this.setGetDataFunction = function (newGetDataFunction) {
+        getDataFunction = newGetDataFunction;
+    };
+
     this.show = function () {
-        that.update(dataList[dataIndex].data);
+        that.update(getDataFunction(dataList[dataIndex]));
     };
 
     this.updateMulti = function (inData) {
