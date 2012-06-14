@@ -173,7 +173,7 @@ protoViz.Window = function (selector) {
 
         boxEnter.append("text")
             .style("font-size", boxTextSize.toString() + "px")
-            .style("fill", "#000")
+            .style("fill", function (d) { return d.textColor || "#000"; })
             .attr("transform", translateBoxText)
             .attr("text-anchor", "middle")
             .text(function (d) {
@@ -189,7 +189,7 @@ protoViz.Window = function (selector) {
             .transition()
             .duration(transitionDuration)
             .style("fill", function (d) {
-                return typeToColorMap[d.type] || typeToColorMap.unused;
+                return d.color || typeToColorMap[d.type] || typeToColorMap.unused;
             });
 
         box.exit().remove();
