@@ -40,14 +40,13 @@
 /*globals d3,btoa,protoViz */
 protoViz.Packet = function (selector) {
     'use strict';
-    var svgBits, bitData,
-        that = this,
+    var that = this,
         boxSize = 50,
         rootSvg = d3.select(selector).append("svg")
-        .attr("title", "a packet")
-        .attr("version", 1.1)
-        .attr("xmlns", "http://www.w3.org/2000/svg")
-        .style("border", "solid 1px #000");
+            .attr("title", "a packet")
+            .attr("version", 1.1)
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .style("border", "solid 1px #000");
 
     function translateXY(d, i) {
         return "translate(" +
@@ -72,13 +71,12 @@ protoViz.Packet = function (selector) {
             width = 8 * boxSize,
             height = data.bytes * boxSize,
             svg = rootSvg.attr("width", width)
-                         .attr("height", height);
-
-        bitData = svg.selectAll("g.bit")
-            .data(data.list)
-            .enter()
-            .append("g")
-            .attr("transform", translateXY);
+                         .attr("height", height),
+            bitData = svg.selectAll("g.bit")
+                .data(data.list)
+                .enter()
+                .append("g")
+                .attr("transform", translateXY);
 
         bitData.append("rect")
             .attr("width", function (d) { return d.length * boxSize; })
