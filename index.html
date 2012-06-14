@@ -1,14 +1,47 @@
 <!DOCYTPE html>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/default.css"/>
-<title>An experiment to visualize ...</title>
+<title>An experiment to visualize windows</title>
 <header></header>
 
-<div id="packet"></div>
-<div id="states"></div>
+<div id="window"></div>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
+        type="text/javascript"></script>
 <script src="assets/d3.v2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="src/states.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/protoViz.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/window.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        var testWindow = new protoViz.Window("#window");
+
+        function update(data) {
+        // TODO: add the delays into the Window object
+            setTimeout(function () {
+                testWindow.next();
+            }, 3000);
+            setTimeout(function () {
+                testWindow.next();
+            }, 6000);
+            setTimeout(function () {
+                testWindow.prev();
+            }, 9000);
+        }
+
+        d3.json("json/multi.json", function (data) {
+            testWindow.setGetDataFunction(function (d) {
+                console.log(d.label);
+                return d.data;
+            });
+
+            testWindow.updateMulti(data);
+            update();
+            setInterval(function () {
+                update();
+            }, 12000);
+        });
+    })
+</script>
 <footer>
     <aside>Copyright &copy; 2012, David Haglund</aside>
 </footer>
