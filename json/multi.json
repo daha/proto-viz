@@ -13,10 +13,12 @@
                 "type": "pending"
             },
             {
-                "type": "nack"
+                "type": "nack",
+                "label": "label"
             },
             {
-                "type": "ack"
+                "type": "ack",
+                "label": "label2"
             },
             {
                 "type": "unused"

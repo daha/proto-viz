@@ -43,6 +43,7 @@ protoViz.Window = function (selector) {
         defaultTextSize = 15,
         boxTextSize = defaultTextSize,
         arrowTextSize = defaultTextSize,
+        labelTextSize = defaultTextSize,
         transitionDuration = 2000,
         arrowIndexMap = d3.scale.ordinal().range(d3.range(10)),
         typeToColorMap = {
@@ -57,7 +58,7 @@ protoViz.Window = function (selector) {
         windowSvg = rootSvg.append("g").attr("transform", "translate(5,5)"),
         getDataFunction = function (d) { return d.data; };
 
-        // Define the arrow head
+    // Define the arrow head
     windowSvg.append("defs")
         .append("marker")
         .attr("id", "ArrowFillLeft")
@@ -109,6 +110,12 @@ protoViz.Window = function (selector) {
                     };
                 });
             }
+            if (val.hasOwnProperty("label")) {
+                acc.labels.push({
+                    text: val.label,
+                    x: arrowX(val)
+                });
+            }
             if (val.arrow) {
                 acc.maxArrowLabels = Math.max(val.arrow.length, acc.maxArrowLabels);
             }
@@ -116,7 +123,7 @@ protoViz.Window = function (selector) {
             acc.width += val.width;
             acc.count += 1;
             return acc;
-        }, {list: [], arrows: [], width: 0, count: 0, maxArrowLabels: 0});
+        }, {list: [], arrows: [], labels: [], width: 0, count: 0, maxArrowLabels: 0});
     }
 
     this.setGetDataFunction = function (newGetDataFunction) {
@@ -148,7 +155,9 @@ protoViz.Window = function (selector) {
 
     // TODO: split this method into smaller methods
     this.update = function (inData) {
-        var data = transformData(inData);
+        var label, labelEnter,
+            data = transformData(inData);
+
         dh = data.length;
         width = data.width + 10;
         height = boxSizeHeight + Math.max(oldMaxArrowLabels, data.maxArrowLabels) * arrowTextSize + 65;
@@ -234,6 +243,36 @@ protoViz.Window = function (selector) {
             .attr("dy", function (d) { return 60 + arrowTextSize * d.index; });
 
         arrow.exit().remove();
+
+        // Group box labels
+        label = windowSvg.selectAll("g.label")
+            .data(data.labels);
+
+        // Enter
+        labelEnter = label.enter()
+            .append("g")
+            .attr("class", "label")
+            .attr("transform", initialTranslateArrow);
+
+        labelEnter.append("text")
+            .attr("dy", labelTextSize);
+
+        // Static attributes
+        label.transition()
+            .duration(transitionDuration)
+            .attr("transform", translateArrow);
+
+        label.select("text")
+            .style("font-size", labelTextSize.toString() + "px")
+            .style("fill", "#000")
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+                return d.text;
+            })
+            .transition()
+            .duration(transitionDuration);
+
+        label.exit().remove();
     };
 
     this.json = function (url) {
