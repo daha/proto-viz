@@ -35,9 +35,8 @@
 
 protoViz.Window = function (selector) {
     'use strict';
-    var svgBits, box, boxEnter, dw, dh, width, height, html, arrow, arrowEnter,
+    var that = this,
         oldMaxArrowLabels = 0,
-        that = this,
         boxSizeHeight = 50,
         defaultWidth = 50,
         defaultTextSize = 15,
@@ -155,12 +154,11 @@ protoViz.Window = function (selector) {
 
     // TODO: split this method into smaller methods
     this.update = function (inData) {
-        var label, labelEnter,
-            data = transformData(inData);
-
-        dh = data.length;
-        width = data.width + 10;
-        height = boxSizeHeight + Math.max(oldMaxArrowLabels, data.maxArrowLabels) * arrowTextSize + 65;
+        var label, labelEnter, box, boxEnter, arrow, arrowEnter,
+            data = transformData(inData),
+            dh = data.length,
+            width = data.width + 10,
+            height = boxSizeHeight + Math.max(oldMaxArrowLabels, data.maxArrowLabels) * arrowTextSize + 65;
         oldMaxArrowLabels = data.maxArrowLabels;
 
         // Update the size to fit the data
