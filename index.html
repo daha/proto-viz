@@ -16,7 +16,7 @@
         var testWindow = new protoViz.Window("#window");
 
         function update(data) {
-        // TODO: add the delays into the Window object
+            // TODO: add the delays into the Window object
             setTimeout(function () {
                 testWindow.next();
             }, 3000);
@@ -30,7 +30,6 @@
 
         d3.json("json/multi.json", function (data) {
             testWindow.setGetDataFunction(function (d) {
-                console.log(d.label);
                 return d.data;
             });
 
