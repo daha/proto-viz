@@ -1,0 +1,122 @@
+[
+    {
+        "color": "#fceee2",
+        "field": "D/C",
+        "length": 1,
+        "value": 1
+    },
+    {
+        "color": "#fceee2",
+        "field": "RF",
+        "length": 1,
+        "value": 0
+    },
+    {
+        "color": "#fceee2",
+        "field": "P",
+        "length": 1,
+        "value": 1
+    },
+    {
+        "color": "#fceee2",
+        "field": "FI",
+        "length": 2,
+        "value": "10"
+    },
+    {
+        "color": "#fceee2",
+        "field": "E",
+        "length": 1,
+        "value": 1
+    },
+    {
+        "color": "#fceee2",
+        "field": "SN",
+        "length": 2,
+        "value": ""
+    },
+    {
+        "color": "#fceee2",
+        "field": "SN",
+        "length": 8,
+        "value": 1023
+    },
+    {
+        "color": "#ecccca",
+        "field": "E",
+        "length": 1,
+        "value": 1
+    },
+    {
+        "color": "#ecccca",
+        "field": "LI",
+        "length": 7,
+        "value": 120
+    },
+    {
+        "color": "#ecccca",
+        "field": "LI",
+        "length": 4,
+        "value": ""
+    },
+    {
+        "color": "#ecccca",
+        "field": "E",
+        "length": 1,
+        "value": 1
+    },
+    {
+        "color": "#ecccca",
+        "field": "LI",
+        "length": 3,
+        "value": ""
+    },
+    {
+        "color": "#ecccca",
+        "field": "LI",
+        "length": 8,
+        "value": 987
+    },
+    {
+        "color": "#ecccca",
+        "field": "E",
+        "length": 1,
+        "value": 0
+    },
+    {
+        "color": "#ecccca",
+        "field": "LI",
+        "length": 7,
+        "value": 456
+    },
+    {
+        "color": "#ecccca",
+        "field": "LI",
+        "length": 4,
+        "value": ""
+    },
+    {
+        "color": "#ecccca",
+        "field": "padding",
+        "length": 4,
+        "value": ""
+    },
+    {
+        "color": "#edf1f6",
+        "field": "",
+        "length": 8,
+        "value": "Data"
+    },
+    {
+        "color": "#fff",
+        "field": "",
+        "length": 8,
+        "value": "..."
+    },
+    {
+        "color": "#edf1f6",
+        "field": "",
+        "length": 8,
+        "value": ""
+    }
+]
