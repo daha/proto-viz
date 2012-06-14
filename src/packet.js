@@ -65,6 +65,10 @@ protoViz.Packet = function (selector) {
         }, {list: [], offset: 0, bytes: 0});
     }
 
+    function translateBitText(d) {
+        return "translate(" + (d.length * boxSize / 2) + "," + (boxSize / 2 * 1.2) + ")";
+    }
+
     this.update = function (inData) {
         var data = transformBits(inData),
             dh = data.length,
@@ -91,8 +95,7 @@ protoViz.Packet = function (selector) {
             .style("font-size", "0.8em")
             .style("fill", "#000")
             .attr("text-anchor", "middle")
-            .attr("dy", boxSize / 2 * 1.2)
-            .attr("dx", function (d) { return d.length * boxSize / 2; })
+            .attr("transform", translateBitText)
             .text(function (d) {
                 var output = "";
                 if (d.field !== "") {
