@@ -80,11 +80,11 @@ protoViz.Window = function (selector) {
         return d.offset + d.width / 2;
     }
 
-    function initialTranslateArrow(d) {
+    function initialTranslateBoxAnnotation(d) {
         return "translate(0,55.5)";
     }
 
-    function translateArrow(d) {
+    function translateBoxAnnotation(d) {
         return "translate(" + d.x + ",55.5)";
     }
 
@@ -211,7 +211,7 @@ protoViz.Window = function (selector) {
         arrowEnter = arrow.enter()
             .append("g")
             .attr("class", "arrows")
-            .attr("transform", initialTranslateArrow);
+            .attr("transform", initialTranslateBoxAnnotation);
 
         arrowEnter.append("line")
             .attr("y2", function (d) { return 45 + 0.5; });
@@ -222,7 +222,7 @@ protoViz.Window = function (selector) {
         // Static attributes
         arrow.transition()
             .duration(transitionDuration)
-            .attr("transform", translateArrow);
+            .attr("transform", translateBoxAnnotation);
 
         arrow.select("line")
             .attr("y2", function (d) { return 45 + 0.5; })
@@ -252,7 +252,7 @@ protoViz.Window = function (selector) {
         labelEnter = label.enter()
             .append("g")
             .attr("class", "label")
-            .attr("transform", initialTranslateArrow);
+            .attr("transform", initialTranslateBoxAnnotation);
 
         labelEnter.append("text")
             .attr("dy", labelTextSize);
@@ -260,7 +260,7 @@ protoViz.Window = function (selector) {
         // Static attributes
         label.transition()
             .duration(transitionDuration)
-            .attr("transform", translateArrow);
+            .attr("transform", translateBoxAnnotation);
 
         label.select("text")
             .style("font-size", labelTextSize.toString() + "px")
