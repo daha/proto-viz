@@ -1,1 +1,1 @@
-var protoViz = {};
+protoViz = {};
