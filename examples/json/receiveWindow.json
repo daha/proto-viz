@@ -4,7 +4,7 @@
 }, {
     "width": 33,
     "type": "pending",
-    "arrow": ["VR(R)", "VR(X)", "VR(H)"]
+    "arrow": ["A", "B", "C"]
 }, {
     "type": "nack"
 }, {
@@ -27,5 +27,5 @@
 }, {
     "type": "unused",
     "id": 514,
-    "arrow": ["VR(MR)"]
+    "arrow": ["D"]
 }]
